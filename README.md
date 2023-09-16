@@ -34,6 +34,7 @@ await _dispatcher.PublishEventAsync(new TodoUpdatedEvent());
 _dispatcher.RemoveAction(OnTodoUpdated);
 _appEventService.DestroyDispatcher(_dispatcher.Key);
 ```
+### Check the Samples folder for more info
 
 ### Installation
 ```cmd
