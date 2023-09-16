@@ -18,7 +18,13 @@ _dispatcher = _appEventService.GetOrCreateDispatcher(todo.Id);
 
 // create action
 public void OnTodoUpdated(TodoUpdatedEvent ev) {
-  // do something
+  
+  InvokeAsync(() =>
+  {
+      // do something with event
+      ...
+      StateHasChanged();
+  });
 }
 
 ...
