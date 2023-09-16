@@ -34,3 +34,8 @@ await _dispatcher.PublishEventAsync(new TodoUpdatedEvent());
 _dispatcher.RemoveAction(OnTodoUpdated);
 _appEventService.DestroyDispatcher(_dispatcher.Key);
 ```
+
+### Installation
+```cmd
+NuGet\Install-Package AppEventService -Version 1.0.0.1
+```
