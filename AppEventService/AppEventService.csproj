@@ -4,9 +4,26 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Simple Blazor server event service</Title>
+    <PackageProjectUrl>https://github.com/vincentnacar02/AppEventService</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vincentnacar02/AppEventService</RepositoryUrl>
+    <Description>Simple Blazor server event service</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Version>1.0.0.1</Version>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.1" />
   </ItemGroup>
 
