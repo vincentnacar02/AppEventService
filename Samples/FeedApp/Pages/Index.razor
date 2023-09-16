@@ -1,0 +1,129 @@
+﻿@page "/"
+@using AppEventService;
+@using FeedApp.Data;
+
+@inject IAppEventService<NewPostEvent> _postEventService;
+@inject IAppEventService<LikeEvent> _likeEventService;
+@implements IDisposable;
+
+<PageTitle>Index</PageTitle>
+
+<h1>Feed App</h1>
+
+<div class="container">
+    <input class="form-control" type="text" placeholder="Your username" @bind="username" />
+    <textarea class="form-control" rows="3" placeholder="Post body" @bind="postBody"></textarea>
+    <button class="btn btn-success" @onclick="SubmitPost">Post</button>
+    <br />
+    @if (_posts.Count > 0)
+    {
+        @foreach (var item in _posts)
+        {
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">
+                        Posted by: @item.PostedBy
+                    </div>
+                    <div class="card-text">
+                        @item.PostBody
+                    </div>
+                    <b>Total Likes: @item.LikeCount</b>
+                    <button class="btn btn-primary" @onclick="() => LikePost(item.PostId)">Like</button>
+                </div>
+            </div>
+            <hr />
+        }
+    }
+    else
+    {
+        <b>No posts available.</b>
+    }
+</div>
+
+
+
+@code {
+
+    private IAppEventDispatcher<NewPostEvent> _newPostDispatcher;
+    private IAppEventDispatcher<LikeEvent> _likeDispatcher;
+
+    private List<Post> _posts = new List<Post>();
+
+    private string username = "Guest";
+    private string postBody = "";
+
+    protected override void OnInitialized()
+    {
+        var eventChannelKey = "FeedChannel1";
+
+        _newPostDispatcher = _postEventService.GetOrCreateDispatcher(eventChannelKey);
+        _newPostDispatcher.AddAction(OnNewPost);
+
+        _likeDispatcher = _likeEventService.GetOrCreateDispatcher(eventChannelKey);
+        _likeDispatcher.AddAction(OnLikePost);
+
+        base.OnInitialized();
+    }
+
+    protected void SubmitPost()
+    {
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            username = "Guest";
+        }
+
+        var newPost = new Post
+            {
+                PostId = Guid.NewGuid().ToString(),
+                PostedBy = username,
+                PostBody = postBody,
+                LikeCount = 0
+            };
+
+        _newPostDispatcher.PublishEvent(new NewPostEvent(newPost));
+        postBody = "";
+    }
+
+    protected void LikePost(string postId)
+    {
+        _likeDispatcher.PublishEvent(new LikeEvent(postId, username));
+    }
+
+    protected void OnNewPost(NewPostEvent ev)
+    {
+        InvokeAsync(() =>
+        {
+            _posts.Add(ev.Post);
+            StateHasChanged();
+        });
+    }
+
+    protected void OnLikePost(LikeEvent ev)
+    {
+        InvokeAsync(() =>
+        {
+            var post = _posts.Find(p => p.PostId == ev.PostId);
+            if (post != null && ev.LikedBy != username)
+            {
+                // lets just increment for now
+                post.LikeCount += 1;
+                StateHasChanged();
+            }
+        });
+    }
+
+    public void Dispose()
+    {
+        if (_newPostDispatcher != null)
+        {
+            _newPostDispatcher.RemoveAction(OnNewPost);
+            _postEventService.DestroyDispatcher(_newPostDispatcher.Key);
+        }
+
+        if (_likeDispatcher != null)
+        {
+            _likeDispatcher.RemoveAction(OnLikePost);
+            _likeEventService.DestroyDispatcher(_likeDispatcher.Key);
+        }
+    }
+}
