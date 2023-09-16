@@ -93,7 +93,12 @@
     {
         InvokeAsync(() =>
         {
-            _posts.Add(ev.Post);
+            _posts.Add(new Post
+            {
+                PostId = ev.Post.PostId,
+                PostBody = ev.Post.PostBody,
+                PostedBy = ev.Post.PostedBy
+            });
             StateHasChanged();
         });
     }
@@ -103,7 +108,7 @@
         InvokeAsync(() =>
         {
             var post = _posts.Find(p => p.PostId == ev.PostId);
-            if (post != null && ev.LikedBy != username)
+            if (post != null)
             {
                 // lets just increment for now
                 post.LikeCount += 1;
