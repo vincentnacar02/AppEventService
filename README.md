@@ -1,5 +1,5 @@
 # AppEventService
-Simple blazor server app event service
+Simple Blazor server app event service that handles real-time events for multiple users
 
 ![design](https://github.com/vincentnacar02/AppEventService/blob/master/design.png?raw=true)
 
