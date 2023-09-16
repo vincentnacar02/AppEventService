@@ -7,7 +7,7 @@ Simple blazor server app event service
 
 ```csharp
 // register service
-Services.AddSingleton<IAppEventService<TodoUpdatedEvent>, AppEventService<TodoUpdatedEvent>>();
+Services.AddAppEventService<TodoUpdatedEvent>();
 
 // inject to component
 @inject IAppEventService<TodoUpdatedEvent> _appEventService;
