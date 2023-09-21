@@ -1,6 +1,8 @@
 # AppEventService
 Simple Blazor server app event service that handles real-time events for multiple users
 
+![Build and tests](https://github.com/vincentnacar02/AppEventService/actions/workflows/dotnet.yml/badge.svg)
+
 ![design](https://github.com/vincentnacar02/AppEventService/blob/master/design.png?raw=true)
 
 ### Basic usage
